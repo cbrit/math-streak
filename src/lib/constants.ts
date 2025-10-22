@@ -2,9 +2,11 @@ import type { DifficultyConfig } from './types';
 
 // Timing constants (in milliseconds)
 export const TIMING = {
-  AUTO_ADVANCE_DELAY: 1500, // Auto-advance after correct answer
-  CELEBRATION_DURATION: 1200, // Celebration animation duration
+  AUTO_ADVANCE_DELAY: 1500, // Auto-advance after correct answer (deprecated - use ANSWER_REVEAL_DURATION)
+  CELEBRATION_DURATION: 1200, // Celebration animation duration (deprecated)
   FEEDBACK_TRANSITION: 300, // Fade in/out for feedback
+  ANSWER_REVEAL_DURATION: 600, // Duration for answer reveal wiggle animation (matches CSS)
+  TRANSITION_DURATION: 600, // Duration for equation slide transition (matches CSS)
 } as const;
 
 // UI constants

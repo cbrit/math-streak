@@ -26,6 +26,9 @@ export interface DifficultyConfig {
   };
 }
 
+// Celebration animation phases
+export type CelebrationPhase = null | 'revealing' | 'transitioning';
+
 // Game state
 export interface GameState {
   currentProblem: Problem;
@@ -34,6 +37,7 @@ export interface GameState {
   highScore: number;
   isAnswerCorrect: boolean | null;
   showFeedback: boolean;
+  celebrationPhase: CelebrationPhase;
 }
 
 // Feedback types

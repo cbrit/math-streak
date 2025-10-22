@@ -10,7 +10,10 @@ type GameAction =
   | { type: 'DELETE_DIGIT' }
   | { type: 'SUBMIT_ANSWER' }
   | { type: 'NEXT_PROBLEM'; problem: Problem }
-  | { type: 'SET_HIGH_SCORE'; score: number };
+  | { type: 'SET_HIGH_SCORE'; score: number }
+  | { type: 'START_CELEBRATION' }
+  | { type: 'TRANSITION_TO_NEXT' }
+  | { type: 'COMPLETE_TRANSITION' };
 
 /**
  * Reducer function to handle game state transitions
@@ -59,9 +62,31 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       return {
         ...state,
         isAnswerCorrect: isCorrect,
-        showFeedback: true,
+        showFeedback: !isCorrect, // Only show modal for incorrect answers
+        celebrationPhase: isCorrect ? 'revealing' : null,
         // Increment streak on correct answer, keep current streak for display on incorrect
         streak: isCorrect ? state.streak + 1 : state.streak,
+      };
+    }
+
+    case 'START_CELEBRATION': {
+      return {
+        ...state,
+        celebrationPhase: 'revealing',
+      };
+    }
+
+    case 'TRANSITION_TO_NEXT': {
+      return {
+        ...state,
+        celebrationPhase: 'transitioning',
+      };
+    }
+
+    case 'COMPLETE_TRANSITION': {
+      return {
+        ...state,
+        celebrationPhase: null,
       };
     }
 
@@ -72,6 +97,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         currentAnswer: '',
         isAnswerCorrect: null,
         showFeedback: false,
+        celebrationPhase: null,
         // Reset streak when moving to next problem after incorrect answer
         streak: state.isAnswerCorrect === false ? 0 : state.streak,
       };
@@ -112,6 +138,7 @@ export function useGameState(config: DifficultyConfig = DEFAULT_CONFIG) {
     highScore,
     isAnswerCorrect: null,
     showFeedback: false,
+    celebrationPhase: null,
   });
 
   // Update high score when streak increases beyond current high score

@@ -21,17 +21,6 @@ export function FeedbackModal({
   problemDisplayString,
   onNext,
 }: FeedbackModalProps) {
-  // Auto-advance on correct answer
-  useEffect(() => {
-    if (isVisible && isCorrect) {
-      const timer = setTimeout(() => {
-        onNext();
-      }, TIMING.AUTO_ADVANCE_DELAY);
-
-      return () => clearTimeout(timer);
-    }
-  }, [isVisible, isCorrect, onNext]);
-
   // Focus Next button when incorrect answer is shown
   useEffect(() => {
     if (isVisible && !isCorrect) {
@@ -43,68 +32,57 @@ export function FeedbackModal({
     }
   }, [isVisible, isCorrect]);
 
+  // Modal only shows for incorrect answers now
   if (!isVisible) return null;
+  if (isCorrect) return null;
 
   return (
     <div
       className={styles.overlay}
       role="dialog"
       aria-modal="true"
-      aria-labelledby={isCorrect ? "celebration-message" : "correct-answer-label"}
+      aria-labelledby="correct-answer-label"
     >
-      <div className={`${styles.modal} ${isCorrect ? styles.correct : styles.incorrect}`}>
-        {isCorrect ? (
-          <div className={styles.celebration}>
+      <div className={`${styles.modal} ${styles.incorrect}`}>
+        <div className={styles.errorContent}>
+          <div
+            id="correct-answer-label"
+            className={styles.correctAnswerLabel}
+            aria-label={`Correct equation: ${problemDisplayString.replace('?', String(correctAnswer))}`}
+          >
+            {problemDisplayString.split('?')[0]}
+            <span className={styles.correctAnswerValue}>
+              {correctAnswer}
+            </span>
+            {problemDisplayString.split('?')[1]}
+          </div>
+
+          <div
+            className={styles.streakInfo}
+            role="status"
+          >
+            Streak: {currentStreak}
+          </div>
+
+          {isNewHighScore && (
             <div
-              id="celebration-message"
-              className={styles.message}
+              className={styles.highScoreBadge}
               role="status"
               aria-live="polite"
             >
-              Great!
+              New High Score!
             </div>
-          </div>
-        ) : (
-          <div className={styles.errorContent}>
-            <div
-              id="correct-answer-label"
-              className={styles.correctAnswerLabel}
-              aria-label={`Correct equation: ${problemDisplayString.replace('?', String(correctAnswer))}`}
-            >
-              {problemDisplayString.split('?')[0]}
-              <span className={styles.correctAnswerValue}>
-                {correctAnswer}
-              </span>
-              {problemDisplayString.split('?')[1]}
-            </div>
+          )}
 
-            <div
-              className={styles.streakInfo}
-              role="status"
-            >
-              Streak: {currentStreak}
-            </div>
-
-            {isNewHighScore && (
-              <div
-                className={styles.highScoreBadge}
-                role="status"
-                aria-live="polite"
-              >
-                New High Score!
-              </div>
-            )}
-
-            <button
-              className={styles.nextButton}
-              onClick={onNext}
-              data-testid="next-button"
-              aria-label="Continue to next problem"
-            >
-              Next
-            </button>
-          </div>
-        )}
+          <button
+            className={styles.nextButton}
+            onClick={onNext}
+            data-testid="next-button"
+            aria-label="Continue to next problem"
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );

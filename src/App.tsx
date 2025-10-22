@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useGameState } from '@/hooks/useGameState';
 import { useSound } from '@/hooks/useSound';
 import { useKeyboardInput } from '@/hooks/useKeyboardInput';
@@ -8,7 +8,7 @@ import { AnswerDisplay } from '@/components/AnswerDisplay';
 import { NumberPad } from '@/components/NumberPad';
 import { FeedbackModal } from '@/components/FeedbackModal';
 import { TenFrame } from '@/components/TenFrame';
-import { FEATURES } from '@/lib/constants';
+import { FEATURES, TIMING } from '@/lib/constants';
 import styles from '@/styles/App.module.css';
 import '@/styles/global.css';
 
@@ -26,16 +26,23 @@ export default function App() {
 
   // Handle next problem
   const handleNext = () => {
+    setShowAnswerInPlace(false); // Ensure answer is hidden for new problem
     actions.nextProblem();
   };
 
-  // Keyboard input integration
+  // Keyboard input integration - disable during celebration
   const { activeKey } = useKeyboardInput({
     onNumberKey: actions.updateAnswer,
     onBackspace: actions.deleteLastDigit,
     onEnter: handleSubmit,
-    enabled: !state.showFeedback, // Disable during feedback
+    enabled: !state.showFeedback && state.celebrationPhase === null,
   });
+
+  // Track animation states for slide transition
+  const [isSlideOut, setIsSlideOut] = useState(false);
+  const [isSlideIn, setIsSlideIn] = useState(false);
+  const [showAnswerInPlace, setShowAnswerInPlace] = useState(false);
+  const [slidingOutProblem, setSlidingOutProblem] = useState<typeof state.currentProblem | null>(null);
 
   // Play sound when answer is checked
   useEffect(() => {
@@ -46,6 +53,37 @@ export default function App() {
     }
   }, [state.isAnswerCorrect, playSuccess, playError]);
 
+  // Orchestrate celebration flow for correct answers
+  useEffect(() => {
+    if (state.celebrationPhase === 'revealing') {
+      const timers: NodeJS.Timeout[] = [];
+
+      // Show the answer immediately
+      setShowAnswerInPlace(true);
+
+      // After reveal animation, start slide-out and prepare new problem
+      timers.push(setTimeout(() => {
+        // Save the current problem for slide-out animation
+        setSlidingOutProblem(state.currentProblem);
+        setIsSlideOut(true);
+        setShowAnswerInPlace(false); // Hide answer as slide-out starts
+
+        // Load new problem immediately so it's ready to slide in
+        actions.nextProblem();
+        setIsSlideIn(true);
+
+        // Reset slide-in after animation completes
+        timers.push(setTimeout(() => {
+          setIsSlideOut(false);
+          setIsSlideIn(false);
+          setSlidingOutProblem(null);
+        }, TIMING.TRANSITION_DURATION));
+      }, TIMING.ANSWER_REVEAL_DURATION));
+
+      return () => timers.forEach(clearTimeout);
+    }
+  }, [state.celebrationPhase, actions]);
+
   return (
     <div className={styles.app}>
       <div className={styles.container}>
@@ -54,9 +92,33 @@ export default function App() {
           highScore={state.highScore}
         />
 
-        <ProblemDisplay
-          displayString={state.currentProblem.displayString}
-        />
+        <div style={{ position: 'relative', minHeight: '120px' }}>
+          {/* Show sliding out problem during transition (without test ID to avoid conflicts) */}
+          {isSlideOut && slidingOutProblem && (
+            <ProblemDisplay
+              displayString={slidingOutProblem.displayString}
+              showAnswer={true}
+              answer={slidingOutProblem.answer}
+              isRevealing={false}
+              isTransitioning={true}
+              isSlideIn={false}
+              includeTestId={false}
+            />
+          )}
+
+          {/* Show current problem (with slide-in animation if transitioning) */}
+          {(!isSlideOut || isSlideIn) && (
+            <ProblemDisplay
+              displayString={state.currentProblem.displayString}
+              showAnswer={showAnswerInPlace}
+              answer={state.currentProblem.answer}
+              isRevealing={showAnswerInPlace && !isSlideOut}
+              isTransitioning={false}
+              isSlideIn={isSlideIn}
+              includeTestId={true}
+            />
+          )}
+        </div>
 
         <TenFrame
           operands={state.currentProblem.operands}
@@ -72,7 +134,7 @@ export default function App() {
           onNumberClick={actions.updateAnswer}
           onBackspace={actions.deleteLastDigit}
           onSubmit={handleSubmit}
-          disabled={state.showFeedback}
+          disabled={state.showFeedback || state.celebrationPhase !== null}
           activeKey={activeKey}
         />
 
