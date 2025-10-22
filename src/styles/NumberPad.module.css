@@ -60,11 +60,11 @@
 .actionButton {
   /* Styling for backspace and submit buttons */
   font-size: var(--font-size-base);
-  background-color: #E8E8E8;
+  background-color: var(--color-surface);
 }
 
 .actionButton:hover:not(:disabled) {
-  background-color: #4A90E2;
+  background-color: var(--color-primary);
   color: var(--color-background);
 }
 

@@ -180,11 +180,17 @@ export function useGameState(settings?: UserSettings) {
   }, [state.isAnswerCorrect, recordAttempt]);
 
   // Regenerate problem when settings change (config is derived from settings)
+  // Don't regenerate during celebration to avoid breaking slide animations
   useEffect(() => {
+    // Skip if currently celebrating (would interrupt animation)
+    if (state.celebrationPhase !== null) {
+      return;
+    }
+
     // Generate new problem with updated config
     const newProblem = generateProblem(config);
     dispatch({ type: 'NEXT_PROBLEM', problem: newProblem });
-  }, [config]);
+  }, [config, state.celebrationPhase]); // Add celebrationPhase to dependencies
 
   /**
    * Add a digit to the current answer

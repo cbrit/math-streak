@@ -14,7 +14,7 @@
   /* Individual square styling */
   width: 48px;
   height: 48px;
-  border: 2px solid #333;
+  border: 2px solid var(--color-border);
   box-sizing: border-box;
 
   /* Smooth color transitions */
@@ -29,12 +29,12 @@
 /* Thicker divider between 5th and 6th squares (centered) */
 /* Right half of the divider - applied to 5th square */
 .square.thickDivider {
-  border-right: 3px solid #333;
+  border-right: 3px solid var(--color-border);
 }
 
 /* Left half of the divider - applied to 6th square */
 .square.thickDividerStart {
-  border-left: 3px solid #333;
+  border-left: 3px solid var(--color-border);
 }
 
 /* Ensure first square has rounded left corners */
@@ -47,7 +47,7 @@
 .square:last-child {
   border-top-right-radius: var(--radius-sm);
   border-bottom-right-radius: var(--radius-sm);
-  border-right: 2px solid #333; /* Restore right border for last square */
+  border-right: 2px solid var(--color-border); /* Restore right border for last square */
 }
 
 /* Responsive sizing for smaller screens */

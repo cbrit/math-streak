@@ -17,12 +17,11 @@
 .settingsButton:hover {
   background: #e0e0e0;
   color: var(--color-text);
-  transform: rotate(30deg);
 }
 
 .settingsButton:active {
   background: #d0d0d0;
-  transform: rotate(30deg) scale(0.95);
+  transform: scale(0.95);
 }
 
 .settingsButton:focus-visible {
@@ -30,10 +29,19 @@
   outline-offset: 2px;
 }
 
+/* Icon rotates on button hover, not the button itself */
+.settingsButton:hover .icon {
+  transform: rotate(30deg);
+}
+
+.settingsButton:active .icon {
+  transform: rotate(30deg) scale(0.95);
+}
+
 .icon {
   width: 24px;
   height: 24px;
-  transition: inherit;
+  transition: transform var(--transition-fast);
 }
 
 /* Responsive adjustments for smaller screens */

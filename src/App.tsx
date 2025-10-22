@@ -26,7 +26,7 @@ export default function App() {
   const { settings, updateSettings } = useSettings();
 
   // Initialize game state
-  const { state, actions, sessionStats } = useGameState();
+  const { state, actions, sessionStats } = useGameState(settings);
 
   // Initialize sound system with settings
   const { playSuccess, playError } = useSound({ enabled: settings.soundEnabled });
