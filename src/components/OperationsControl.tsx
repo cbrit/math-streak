@@ -7,11 +7,10 @@ interface OperationsControlProps {
 }
 
 // Operation display configuration
+// Note: Multiplication and division implementations exist but are hidden from UI for now
 const OPERATIONS: Array<{ value: Operation; label: string; symbol: string }> = [
   { value: 'addition', label: 'Addition', symbol: '+' },
   { value: 'subtraction', label: 'Subtraction', symbol: '−' },
-  { value: 'multiplication', label: 'Multiplication', symbol: '×' },
-  { value: 'division', label: 'Division', symbol: '÷' },
 ];
 
 /**

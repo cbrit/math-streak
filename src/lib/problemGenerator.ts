@@ -110,7 +110,7 @@ function generateAdditionOperands(config: DifficultyConfig): number[] {
 
 /**
  * Generate operands that satisfy constraints for subtraction with 'result' unknown
- * For future use: first operand - second operand = result, where result >= 0
+ * Ensures first operand - second operand = result, where result >= 0 (no negative answers)
  */
 function generateSubtractionOperands(config: DifficultyConfig): number[] {
   const { operandCount, constraints } = config;
@@ -120,16 +120,27 @@ function generateSubtractionOperands(config: DifficultyConfig): number[] {
     throw new Error('Subtraction currently only supports 2 operands');
   }
 
-  // Generate result first (what we want the answer to be)
+  // Generate result first (what we want the answer to be) - always >= 0
   const result = getRandomInt(minOperand, maxResult);
 
   // Generate subtrahend (number being subtracted)
   const subtrahend = getRandomInt(minOperand, maxOperand);
 
-  // Calculate minuend ensuring it doesn't exceed maxOperand
-  const minuend = Math.min(result + subtrahend, maxOperand);
+  // Calculate minuend to ensure non-negative result
+  // minuend - subtrahend = result, so minuend = result + subtrahend
+  const minuend = result + subtrahend;
 
-  return [minuend, subtrahend];
+  // Clamp to maxOperand if necessary
+  const clampedMinuend = Math.min(minuend, maxOperand);
+
+  // If clamping would make the result negative, adjust subtrahend
+  if (clampedMinuend < subtrahend) {
+    // Make subtrahend fit within clamped minuend to ensure result >= 0
+    const adjustedSubtrahend = Math.min(subtrahend, clampedMinuend);
+    return [clampedMinuend, adjustedSubtrahend];
+  }
+
+  return [clampedMinuend, subtrahend];
 }
 
 /**
