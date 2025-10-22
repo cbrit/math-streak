@@ -45,44 +45,42 @@ export function generateProblem(config: DifficultyConfig): Problem {
   const { constraints, operations, unknownPositions } = config;
   const { minOperand = 0, maxOperand = 10 } = constraints;
 
-  // Step 1: Generate two random numbers
-  let num1 = getRandomInt(minOperand, maxOperand);
-  let num2 = getRandomInt(minOperand, maxOperand);
-
-  // Step 2: Pick random operation from enabled operations
+  // Step 1: Randomly select operator
   const operation = getRandomElement(operations);
 
-  // Step 3: If subtraction, ensure larger number is first (prevents negatives)
-  if (operation === 'subtraction') {
-    if (num2 > num1) {
-      [num1, num2] = [num2, num1]; // Swap so num1 >= num2
-    }
-  }
+  // Step 2: Generate first number N (0-10 inclusive)
+  let num1 = getRandomInt(minOperand, maxOperand);
 
-  // Step 4: Calculate the answer
+  // Step 3: Generate second number M (0-10 inclusive)
+  let num2 = getRandomInt(minOperand, maxOperand);
+
+  // Step 4: Apply operator-specific logic
   let result: number;
-  switch (operation) {
-    case 'addition':
-      result = num1 + num2;
-      break;
-    case 'subtraction':
-      result = num1 - num2;
-      break;
-    case 'multiplication':
-      result = num1 * num2;
-      break;
-    case 'division':
-      // For division, ensure no division by zero and whole number result
-      if (num2 === 0) {
-        num2 = 1; // Avoid division by zero
-      }
+
+  if (operation === 'addition') {
+    // For addition: clamp num2 so that num1 + num2 <= 10
+    num2 = Math.min(num2, maxOperand - num1);
+    result = num1 + num2;
+  } else if (operation === 'subtraction') {
+    // For subtraction: if num2 > num1, swap them (larger number first)
+    if (num2 > num1) {
+      [num1, num2] = [num2, num1];
+    }
+    result = num1 - num2;
+  } else if (operation === 'multiplication') {
+    // For multiplication (future use)
+    result = num1 * num2;
+  } else {
+    // For division (future use)
+    if (num2 === 0) {
+      num2 = 1; // Avoid division by zero
+    }
+    result = num1 / num2;
+    // If not a whole number, adjust num1 to make it whole
+    if (!Number.isInteger(result)) {
+      num1 = num2 * getRandomInt(minOperand, Math.min(maxOperand, Math.floor(maxOperand / num2)));
       result = num1 / num2;
-      // If not a whole number, adjust num1 to make it whole
-      if (!Number.isInteger(result)) {
-        num1 = num2 * getRandomInt(minOperand, Math.min(maxOperand, Math.floor(maxOperand / num2)));
-        result = num1 / num2;
-      }
-      break;
+    }
   }
 
   // Store all three values in an array: [operand1, operand2, result]
