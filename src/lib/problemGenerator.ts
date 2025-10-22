@@ -202,6 +202,58 @@ function generateOperands(config: DifficultyConfig, operation: Operation): numbe
 }
 
 /**
+ * Calculate the value of an unknown operand given the result and other operands
+ *
+ * This function solves for the missing operand when the unknown position is not the result.
+ * For example: "? × 3 = 12" should return 4 (because 4 × 3 = 12)
+ *
+ * @param operation - The math operation (addition, subtraction, multiplication, division)
+ * @param generatedOperands - The operands array from generation (where one position is actually the result)
+ * @param unknownIndex - Which operand position is unknown (0 or 1)
+ * @param result - The result value (from generatedOperands[unknownIndex])
+ * @returns The correct value for the unknown operand
+ */
+function calculateUnknownOperand(
+  operation: Operation,
+  generatedOperands: number[],
+  unknownIndex: number,
+  result: number
+): number {
+  // Get the known operand (the other one that isn't unknown)
+  const knownOperand = generatedOperands[1 - unknownIndex];
+
+  switch (operation) {
+    case 'addition':
+      // ? + 3 = 7 → answer = 7 - 3 = 4
+      // 3 + ? = 7 → answer = 7 - 3 = 4
+      return result - knownOperand;
+
+    case 'subtraction':
+      if (unknownIndex === 0) {
+        // ? - 3 = 4 → answer = 4 + 3 = 7
+        return result + knownOperand;
+      } else {
+        // 10 - ? = 3 → answer = 10 - 3 = 7
+        return generatedOperands[0] - result;
+      }
+
+    case 'multiplication':
+      // ? × 3 = 12 → answer = 12 ÷ 3 = 4
+      // 3 × ? = 12 → answer = 12 ÷ 3 = 4
+      return result / knownOperand;
+
+    case 'division':
+      if (unknownIndex === 0) {
+        // ? ÷ 3 = 4 → answer = 4 × 3 = 12
+        return result * knownOperand;
+      } else {
+        // 12 ÷ ? = 4 → answer = 12 ÷ 4 = 3
+        return generatedOperands[0] / result;
+      }
+  }
+}
+
+/**
  * Generate display string with unknown position marked as ?
  */
 function generateDisplayString(
@@ -255,11 +307,39 @@ export function generateProblem(config: DifficultyConfig): Problem {
   // 2. Select random unknown position from available positions
   const unknownPosition = getRandomElement(config.unknownPositions);
 
-  // 3. Generate operands that satisfy constraints
-  const operands = generateOperands(config, operation);
+  // 3. Generate operands that satisfy constraints (assumes result is unknown)
+  const generatedOperands = generateOperands(config, operation);
 
-  // 4. Calculate the answer
-  const answer = calculateAnswer(operation, operands);
+  // 4. Calculate answer based on unknown position
+  let answer: number;
+  let operands: number[];
+
+  if (unknownPosition === 'result') {
+    // Standard case: the result is unknown (e.g., "3 + 4 = ?")
+    operands = generatedOperands;
+    answer = calculateAnswer(operation, operands);
+  } else {
+    // Unknown is an operand (e.g., "? × 3 = 12")
+    const match = unknownPosition.match(/^operand-(\d+)$/);
+    if (!match) {
+      throw new Error(`Invalid unknown position: ${unknownPosition}`);
+    }
+
+    const unknownIndex = parseInt(match[1], 10);
+
+    // In the generated operands, the position that should be unknown
+    // actually contains the result value (because generators assume result is unknown)
+    // Example: For "? × 3 = 12", generatedOperands might be [12, 3]
+    const result = generatedOperands[unknownIndex];
+
+    // Calculate what the missing operand should be
+    // Example: 12 ÷ 3 = 4, so the answer is 4
+    answer = calculateUnknownOperand(operation, generatedOperands, unknownIndex, result);
+
+    // Build the correct operands array with the answer in the right position
+    operands = [...generatedOperands];
+    operands[unknownIndex] = answer;
+  }
 
   // 5. Generate display string
   const displayString = generateDisplayString(operation, operands, unknownPosition, answer);
