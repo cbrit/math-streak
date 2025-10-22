@@ -48,6 +48,10 @@
   background-color: var(--color-surface);
 }
 
+.checkboxLabel.selected {
+  background-color: var(--color-surface);
+}
+
 .checkboxLabel.disabled {
   cursor: not-allowed;
   opacity: 0.5;

@@ -188,8 +188,8 @@ export default function App() {
               />
               <div style={{ marginTop: 'var(--spacing-md)' }}>
                 <UnknownPositionControl
-                  selected={settings.unknownPositions[0]}
-                  onChange={(pos) => updateSettings({ unknownPositions: [pos] })}
+                  selected={settings.unknownPositions}
+                  onChange={(positions) => updateSettings({ unknownPositions: positions })}
                 />
               </div>
             </section>

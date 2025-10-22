@@ -29,7 +29,7 @@ export const FEATURES = {
 
 // Initial difficulty configuration (addition, sum ≤ 10)
 export const DEFAULT_CONFIG: DifficultyConfig = {
-  name: 'Kindergarten Addition',
+  name: 'Kindergarten Math',
   operations: ['addition'],
   operandCount: 2,
   unknownPositions: ['result'],
@@ -43,7 +43,7 @@ export const DEFAULT_CONFIG: DifficultyConfig = {
 // Default user settings
 export const DEFAULT_SETTINGS: UserSettings = {
   operations: ['addition'],
-  unknownPositions: ['result'],
+  unknownPositions: ['result'], // Array of positions where unknown can appear
   soundEnabled: true,
   darkMode: false,
 };

@@ -2,8 +2,8 @@ import type { UnknownPosition } from '@/lib/types';
 import styles from '@/styles/SettingsControls.module.css';
 
 interface UnknownPositionControlProps {
-  selected: UnknownPosition;
-  onChange: (position: UnknownPosition) => void;
+  selected: UnknownPosition[];
+  onChange: (positions: UnknownPosition[]) => void;
 }
 
 // Unknown position display configuration
@@ -17,31 +17,47 @@ const POSITIONS: Array<{ value: UnknownPosition; label: string; example: string 
  * Control for selecting where the unknown (?) appears in the math problem.
  *
  * Features:
- * - Single selection via radio buttons
+ * - Multiple selection via checkboxes
+ * - At least one position must always be selected
  * - Examples showing how each position looks
  * - Keyboard accessible with proper ARIA labels
- * - Clear visual feedback for selected position
+ * - Clear visual feedback for selected positions
  */
 export function UnknownPositionControl({ selected, onChange }: UnknownPositionControlProps) {
+  const handleToggle = (position: UnknownPosition) => {
+    const isCurrentlySelected = selected.includes(position);
+
+    if (isCurrentlySelected) {
+      // Only allow deselection if there are other positions selected
+      if (selected.length > 1) {
+        onChange(selected.filter(p => p !== position));
+      }
+      // If this is the last selected position, do nothing (keep at least one selected)
+    } else {
+      // Add to selection
+      onChange([...selected, position]);
+    }
+  };
+
   return (
     <fieldset className={styles.fieldset}>
       <legend className={styles.legend}>Unknown Position</legend>
-      <div className={styles.radioGroup}>
+      <div className={styles.checkboxGroup}>
         {POSITIONS.map(({ value, label, example }) => {
-          const isSelected = selected === value;
+          const isSelected = selected.includes(value);
 
           return (
             <label
               key={value}
-              className={`${styles.radioLabel} ${isSelected ? styles.selected : ''}`}
+              className={`${styles.checkboxLabel} ${isSelected ? styles.selected : ''}`}
             >
               <input
-                type="radio"
+                type="checkbox"
                 name="unknown-position"
                 value={value}
                 checked={isSelected}
-                onChange={() => onChange(value)}
-                className={styles.radio}
+                onChange={() => handleToggle(value)}
+                className={styles.checkbox}
                 aria-label={`${label}: ${example}`}
               />
               <span className={styles.labelContent}>
