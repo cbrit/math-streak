@@ -1,0 +1,126 @@
+/* Overlay - semi-transparent background */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+  z-index: 1001; /* Above feedback modal (z-index: 1000) */
+  animation: fadeIn var(--transition-base);
+}
+
+/* Panel container - slides in from right */
+.panel {
+  background: var(--color-background);
+  width: 90vw;
+  max-width: 400px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
+  animation: slideIn var(--transition-base);
+  overflow: hidden;
+}
+
+/* Header with title and close button */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--color-surface);
+  flex-shrink: 0;
+}
+
+.title {
+  font-size: var(--font-size-large);
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.closeButton {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border-radius: var(--radius-md);
+  color: var(--color-text-light);
+  transition: var(--transition-fast);
+}
+
+.closeButton:hover {
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.closeButton:active {
+  background: #e0e0e0;
+  transform: scale(0.95);
+}
+
+.closeButton:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.closeIcon {
+  width: 24px;
+  height: 24px;
+}
+
+/* Scrollable content area */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-lg);
+  -webkit-overflow-scrolling: touch;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .panel {
+    width: 100vw;
+    max-width: none;
+  }
+
+  .header {
+    padding: var(--spacing-md);
+  }
+
+  .content {
+    padding: var(--spacing-md);
+  }
+
+  .title {
+    font-size: var(--font-size-base);
+  }
+}

@@ -1,8 +1,9 @@
-import { useReducer, useCallback, useEffect } from 'react';
+import { useReducer, useCallback, useEffect, useMemo } from 'react';
 import { useLocalStorage } from './useLocalStorage';
+import { useSessionStats } from './useSessionStats';
 import { generateProblem } from '@/lib/problemGenerator';
 import { DEFAULT_CONFIG, STORAGE_KEYS, UI } from '@/lib/constants';
-import type { GameState, DifficultyConfig, Problem } from '@/lib/types';
+import type { GameState, DifficultyConfig, Problem, UserSettings } from '@/lib/types';
 
 // Action types for game state updates
 type GameAction =
@@ -123,12 +124,34 @@ function gameReducer(state: GameState, action: GameAction): GameState {
  * - Streak tracking and high score persistence
  * - Feedback state for correct/incorrect answers
  *
- * @param config - Difficulty configuration (defaults to DEFAULT_CONFIG)
+ * @param settings - User settings for operations and unknown positions (optional, uses DEFAULT_CONFIG if not provided)
  * @returns Game state and action functions
  */
-export function useGameState(config: DifficultyConfig = DEFAULT_CONFIG) {
+export function useGameState(settings?: UserSettings) {
+  // Derive DifficultyConfig from settings
+  const config = useMemo((): DifficultyConfig => {
+    if (!settings) {
+      return DEFAULT_CONFIG;
+    }
+
+    return {
+      name: 'User Custom',
+      operations: settings.operations,
+      operandCount: 2,
+      unknownPositions: settings.unknownPositions,
+      constraints: {
+        maxResult: 20,
+        minOperand: 0,
+        maxOperand: 20,
+      },
+    };
+  }, [settings]);
+
   // Persist high score to localStorage
   const [highScore, setHighScore] = useLocalStorage(STORAGE_KEYS.HIGH_SCORE, 0);
+
+  // Track session statistics (not persisted)
+  const { stats, recordAttempt, resetStats, accuracy, duration } = useSessionStats();
 
   // Initialize game state with first problem
   const [state, dispatch] = useReducer(gameReducer, {
@@ -148,6 +171,20 @@ export function useGameState(config: DifficultyConfig = DEFAULT_CONFIG) {
       dispatch({ type: 'SET_HIGH_SCORE', score: state.streak });
     }
   }, [state.streak, state.highScore, setHighScore]);
+
+  // Track session statistics when answer is submitted
+  useEffect(() => {
+    if (state.isAnswerCorrect !== null) {
+      recordAttempt(state.isAnswerCorrect);
+    }
+  }, [state.isAnswerCorrect, recordAttempt]);
+
+  // Regenerate problem when settings change (config is derived from settings)
+  useEffect(() => {
+    // Generate new problem with updated config
+    const newProblem = generateProblem(config);
+    dispatch({ type: 'NEXT_PROBLEM', problem: newProblem });
+  }, [config]);
 
   /**
    * Add a digit to the current answer
@@ -187,6 +224,12 @@ export function useGameState(config: DifficultyConfig = DEFAULT_CONFIG) {
       deleteLastDigit,
       submitAnswer,
       nextProblem,
+    },
+    sessionStats: {
+      stats,
+      accuracy,
+      duration,
+      resetStats,
     },
   };
 }

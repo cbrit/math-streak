@@ -1,0 +1,65 @@
+.toggleContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  cursor: pointer;
+  user-select: none;
+}
+
+.label {
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.switch {
+  position: relative;
+  width: 52px;
+  height: 28px;
+  min-height: 28px;
+  background-color: #cccccc;
+  border-radius: 14px;
+  transition: background-color 200ms ease;
+  cursor: pointer;
+}
+
+.switch.enabled {
+  background-color: var(--color-primary);
+}
+
+.knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 24px;
+  height: 24px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 200ms ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.knob.enabled {
+  transform: translateX(24px);
+}
+
+/* Hidden checkbox for accessibility */
+.checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Keyboard focus indicator */
+.checkbox:focus-visible + .switch {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Touch-friendly sizing on mobile */
+@media (max-width: 768px) {
+  .toggleContainer {
+    padding: var(--spacing-sm) 0;
+  }
+}

@@ -2,22 +2,34 @@ import { useEffect, useState } from 'react';
 import { useGameState } from '@/hooks/useGameState';
 import { useSound } from '@/hooks/useSound';
 import { useKeyboardInput } from '@/hooks/useKeyboardInput';
+import { useSettings } from '@/hooks/useSettings';
 import { ScoreDisplay } from '@/components/ScoreDisplay';
 import { ProblemDisplay } from '@/components/ProblemDisplay';
 import { AnswerDisplay } from '@/components/AnswerDisplay';
 import { NumberPad } from '@/components/NumberPad';
 import { FeedbackModal } from '@/components/FeedbackModal';
 import { TenFrame } from '@/components/TenFrame';
+import { SettingsButton } from '@/components/SettingsButton';
+import { SettingsPanel } from '@/components/SettingsPanel';
+import { SessionStats } from '@/components/SessionStats';
+import { SoundToggle } from '@/components/SoundToggle';
+import { DarkModeToggle } from '@/components/DarkModeToggle';
+import { OperationsControl } from '@/components/OperationsControl';
+import { UnknownPositionControl } from '@/components/UnknownPositionControl';
 import { FEATURES, TIMING } from '@/lib/constants';
 import styles from '@/styles/App.module.css';
 import '@/styles/global.css';
+import '@/styles/darkTheme.css';
 
 export default function App() {
-  // Initialize game state
-  const { state, actions } = useGameState();
+  // Initialize settings
+  const { settings, updateSettings } = useSettings();
 
-  // Initialize sound system
-  const { playSuccess, playError } = useSound();
+  // Initialize game state
+  const { state, actions, sessionStats } = useGameState();
+
+  // Initialize sound system with settings
+  const { playSuccess, playError } = useSound({ enabled: settings.soundEnabled });
 
   // Handle answer submission
   const handleSubmit = () => {
@@ -43,6 +55,9 @@ export default function App() {
   const [isSlideIn, setIsSlideIn] = useState(false);
   const [showAnswerInPlace, setShowAnswerInPlace] = useState(false);
   const [slidingOutProblem, setSlidingOutProblem] = useState<typeof state.currentProblem | null>(null);
+
+  // Settings panel state
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   // Play sound when answer is checked
   useEffect(() => {
@@ -85,8 +100,12 @@ export default function App() {
   }, [state.celebrationPhase, actions]);
 
   return (
-    <div className={styles.app}>
+    <div className={styles.app} data-theme={settings.darkMode ? 'dark' : 'light'}>
       <div className={styles.container}>
+        <SettingsButton
+          onClick={() => setSettingsOpen(true)}
+        />
+
         <ScoreDisplay
           streak={state.streak}
           highScore={state.highScore}
@@ -147,6 +166,75 @@ export default function App() {
           problemDisplayString={state.currentProblem.displayString}
           onNext={handleNext}
         />
+
+        <SettingsPanel
+          isOpen={settingsOpen}
+          onClose={() => setSettingsOpen(false)}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-xl)' }}>
+            {/* Game Settings Section */}
+            <section>
+              <h3 style={{
+                marginBottom: 'var(--spacing-md)',
+                color: 'var(--color-text)',
+                fontSize: 'var(--font-size-large)',
+                fontWeight: 600
+              }}>
+                Game Settings
+              </h3>
+              <OperationsControl
+                selected={settings.operations}
+                onChange={(ops) => updateSettings({ operations: ops })}
+              />
+              <div style={{ marginTop: 'var(--spacing-md)' }}>
+                <UnknownPositionControl
+                  selected={settings.unknownPositions[0]}
+                  onChange={(pos) => updateSettings({ unknownPositions: [pos] })}
+                />
+              </div>
+            </section>
+
+            {/* Display Section */}
+            <section>
+              <h3 style={{
+                marginBottom: 'var(--spacing-md)',
+                color: 'var(--color-text)',
+                fontSize: 'var(--font-size-large)',
+                fontWeight: 600
+              }}>
+                Display
+              </h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-md)' }}>
+                <DarkModeToggle
+                  enabled={settings.darkMode}
+                  onChange={(enabled) => updateSettings({ darkMode: enabled })}
+                />
+                <SoundToggle
+                  enabled={settings.soundEnabled}
+                  onChange={(enabled) => updateSettings({ soundEnabled: enabled })}
+                />
+              </div>
+            </section>
+
+            {/* Session Statistics Section */}
+            <section>
+              <h3 style={{
+                marginBottom: 'var(--spacing-md)',
+                color: 'var(--color-text)',
+                fontSize: 'var(--font-size-large)',
+                fontWeight: 600
+              }}>
+                Session Statistics
+              </h3>
+              <SessionStats
+                stats={sessionStats.stats}
+                accuracy={sessionStats.accuracy}
+                duration={sessionStats.duration}
+                onReset={sessionStats.resetStats}
+              />
+            </section>
+          </div>
+        </SettingsPanel>
       </div>
     </div>
   );

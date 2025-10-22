@@ -1,0 +1,45 @@
+.settingsButton {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  color: var(--color-text-light);
+  transition: var(--transition-fast);
+  z-index: 10;
+}
+
+.settingsButton:hover {
+  background: #e0e0e0;
+  color: var(--color-text);
+  transform: rotate(30deg);
+}
+
+.settingsButton:active {
+  background: #d0d0d0;
+  transform: rotate(30deg) scale(0.95);
+}
+
+.settingsButton:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  transition: inherit;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .settingsButton {
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+  }
+}

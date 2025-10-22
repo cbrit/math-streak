@@ -42,3 +42,19 @@ export interface GameState {
 
 // Feedback types
 export type FeedbackType = 'correct' | 'incorrect' | null;
+
+// User settings interface
+export interface UserSettings {
+  operations: Operation[];
+  unknownPositions: UnknownPosition[];
+  soundEnabled: boolean;
+  darkMode: boolean;
+}
+
+// Session statistics interface (not persisted)
+export interface SessionStats {
+  problemsAttempted: number;
+  correctAnswers: number;
+  incorrectAnswers: number;
+  sessionStartTime: number; // timestamp
+}

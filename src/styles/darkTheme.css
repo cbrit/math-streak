@@ -1,0 +1,25 @@
+/* Dark theme overrides */
+[data-theme="dark"] {
+  /* Base colors */
+  --color-background: #1a1a1a;
+  --color-surface: #2d2d2d;
+  --color-text: #e0e0e0;
+  --color-text-light: #a0a0a0;
+
+  /* Keep primary, success, error vibrant but slightly adjusted for dark backgrounds */
+  --color-primary: #5fa3ef;
+  --color-success: #8ee651;
+  --color-error: #ff7b7b;
+
+  /* Celebration colors - slightly brighter for dark mode */
+  --color-celebration-1: #ffe04d;
+  --color-celebration-2: #ff7bd4;
+  --color-celebration-3: #5eddd4;
+}
+
+/* Smooth transition for theme changes */
+html,
+body,
+.app {
+  transition: background-color var(--transition-base), color var(--transition-base);
+}

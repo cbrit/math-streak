@@ -1,0 +1,190 @@
+/* Shared styling for Operations and Unknown Position controls */
+
+/* Fieldset container */
+.fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+  margin-bottom: var(--spacing-lg);
+}
+
+/* Legend (section label) */
+.legend {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-md);
+  display: block;
+}
+
+/* Checkbox group container */
+.checkboxGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+/* Radio group container */
+.radioGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+/* Checkbox label */
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  user-select: none;
+  transition: background-color var(--transition-fast);
+  min-height: 44px; /* WCAG touch target */
+}
+
+.checkboxLabel:hover:not(.disabled) {
+  background-color: var(--color-surface);
+}
+
+.checkboxLabel.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Radio label */
+.radioLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  user-select: none;
+  transition: background-color var(--transition-fast);
+  min-height: 44px; /* WCAG touch target */
+}
+
+.radioLabel:hover {
+  background-color: var(--color-surface);
+}
+
+.radioLabel.selected {
+  background-color: var(--color-surface);
+}
+
+/* Actual input elements (styled custom) */
+.checkbox {
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--color-text-light);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+.checkbox:checked {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.checkbox:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.checkbox:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.checkbox:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.radio {
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--color-text-light);
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+}
+
+.radio:checked {
+  border-color: var(--color-primary);
+}
+
+.radio:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+}
+
+.radio:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Label text */
+.labelText {
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  flex: 1;
+}
+
+/* Symbol (for operations) */
+.symbol {
+  color: var(--color-text-light);
+  font-weight: normal;
+}
+
+/* Label content wrapper (for radio with example) */
+.labelContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  flex: 1;
+}
+
+/* Example text (for unknown position) */
+.example {
+  font-size: var(--font-size-small);
+  color: var(--color-text-light);
+  font-family: monospace;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .legend {
+    font-size: var(--font-size-small);
+  }
+
+  .labelText {
+    font-size: var(--font-size-small);
+  }
+
+  .example {
+    font-size: 14px;
+  }
+}

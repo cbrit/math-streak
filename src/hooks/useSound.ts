@@ -7,7 +7,12 @@ interface SoundHook {
   error: string | null;
 }
 
-export function useSound(): SoundHook {
+interface UseSoundOptions {
+  enabled?: boolean;
+}
+
+export function useSound(options: UseSoundOptions = {}): SoundHook {
+  const { enabled = true } = options;
   const audioContextRef = useRef<AudioContext | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -88,7 +93,7 @@ export function useSound(): SoundHook {
   };
 
   const playSuccess = () => {
-    if (!audioContextRef.current) {
+    if (!enabled || !audioContextRef.current) {
       return;
     }
 
@@ -102,7 +107,7 @@ export function useSound(): SoundHook {
   };
 
   const playError = () => {
-    if (!audioContextRef.current) {
+    if (!enabled || !audioContextRef.current) {
       return;
     }
 

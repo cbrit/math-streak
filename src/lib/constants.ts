@@ -1,4 +1,4 @@
-import type { DifficultyConfig } from './types';
+import type { DifficultyConfig, UserSettings } from './types';
 
 // Timing constants (in milliseconds)
 export const TIMING = {
@@ -19,6 +19,7 @@ export const UI = {
 // Local storage keys
 export const STORAGE_KEYS = {
   HIGH_SCORE: 'math-streak-high-score',
+  USER_SETTINGS: 'math-streak-user-settings',
 } as const;
 
 // Feature flags
@@ -37,4 +38,12 @@ export const DEFAULT_CONFIG: DifficultyConfig = {
     minOperand: 0,
     maxOperand: 10,
   },
+};
+
+// Default user settings
+export const DEFAULT_SETTINGS: UserSettings = {
+  operations: ['addition'],
+  unknownPositions: ['result'],
+  soundEnabled: true,
+  darkMode: false,
 };

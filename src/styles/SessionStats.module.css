@@ -1,0 +1,100 @@
+.sessionStats {
+  /* Container for session statistics section */
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+  max-width: 400px;
+}
+
+.heading {
+  /* Section heading */
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-md);
+  text-align: center;
+}
+
+.statsGrid {
+  /* Grid container for stat rows */
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.statRow {
+  /* Individual stat row with label and value */
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--spacing-md);
+}
+
+.label {
+  /* Stat label text */
+  font-size: var(--font-size-base);
+  color: var(--color-text-light);
+  font-weight: 500;
+}
+
+.value {
+  /* Stat value - larger and more prominent */
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  font-weight: 700;
+  text-align: right;
+}
+
+.percentage {
+  /* Accuracy percentage inline with correct count */
+  font-size: var(--font-size-small);
+  color: var(--color-text-light);
+  font-weight: 500;
+  margin-left: var(--spacing-xs);
+}
+
+.resetButton {
+  /* Reset statistics button */
+  width: 100%;
+  padding: var(--spacing-md);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text);
+  background-color: #E8E8E8;
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  user-select: none;
+}
+
+.resetButton:hover {
+  background-color: var(--color-primary);
+  color: var(--color-background);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.resetButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.resetButton:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Mobile-friendly layout */
+@media (max-width: 480px) {
+  .sessionStats {
+    max-width: 100%;
+    margin: var(--spacing-md) 0;
+  }
+
+  .statRow {
+    gap: var(--spacing-sm);
+  }
+}
