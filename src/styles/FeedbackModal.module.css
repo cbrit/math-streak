@@ -1,0 +1,175 @@
+/* Overlay - semi-transparent background */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn var(--transition-base);
+}
+
+/* Modal container */
+.modal {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  min-width: 300px;
+  max-width: 90vw;
+  text-align: center;
+  animation: scaleIn var(--transition-base);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* Correct answer celebration */
+.modal.correct {
+  background: linear-gradient(
+    135deg,
+    var(--color-celebration-1),
+    var(--color-celebration-2)
+  );
+  color: white;
+}
+
+.celebration {
+  padding: var(--spacing-lg);
+}
+
+.message {
+  font-size: var(--font-size-xxlarge);
+  font-weight: 700;
+  animation: pulse 0.6s ease-in-out;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Incorrect answer display */
+.modal.incorrect {
+  background: white;
+  border: 3px solid var(--color-error);
+}
+
+.errorContent {
+  padding: var(--spacing-md);
+}
+
+.correctAnswerLabel {
+  font-size: var(--font-size-base);
+  color: var(--color-text-light);
+  margin-bottom: var(--spacing-sm);
+}
+
+.correctAnswerValue {
+  font-size: var(--font-size-xxlarge);
+  font-weight: 700;
+  color: var(--color-error);
+  margin-bottom: var(--spacing-lg);
+}
+
+.streakInfo {
+  font-size: var(--font-size-large);
+  color: var(--color-text);
+  margin-bottom: var(--spacing-md);
+  font-weight: 600;
+}
+
+.highScoreBadge {
+  background: var(--color-success);
+  color: white;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  margin: 0 auto var(--spacing-lg);
+  display: inline-block;
+  box-shadow: 0 2px 8px rgba(126, 211, 33, 0.3);
+}
+
+.nextButton {
+  background: var(--color-primary);
+  color: white;
+  font-size: var(--font-size-large);
+  padding: var(--spacing-md) var(--spacing-xl);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  min-width: 120px;
+  min-height: 60px;
+  transition: var(--transition-fast);
+  box-shadow: 0 2px 8px rgba(74, 144, 226, 0.2);
+}
+
+.nextButton:hover {
+  background: #3a7bc8;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+.nextButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(74, 144, 226, 0.2);
+}
+
+.nextButton:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 4px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 480px) {
+  .modal {
+    min-width: 280px;
+    padding: var(--spacing-lg);
+  }
+
+  .message {
+    font-size: var(--font-size-xlarge);
+  }
+
+  .correctAnswerValue {
+    font-size: var(--font-size-xlarge);
+  }
+
+  .streakInfo {
+    font-size: var(--font-size-base);
+  }
+
+  .nextButton {
+    font-size: var(--font-size-base);
+    min-width: 100px;
+    min-height: 50px;
+  }
+}

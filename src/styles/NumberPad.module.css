@@ -1,0 +1,77 @@
+.numberPad {
+  /* Grid layout container - 3 columns */
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-md);
+  max-width: 240px;
+  margin: 0 auto;
+}
+
+.button {
+  /* Base button styling */
+  width: 60px;
+  height: 60px;
+  font-size: var(--font-size-large);
+  font-weight: 600;
+
+  /* Visual styling */
+  background-color: var(--color-surface);
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+
+  /* Text styling */
+  color: var(--color-text);
+
+  /* Interaction */
+  cursor: pointer;
+  user-select: none;
+  transition: all var(--transition-fast);
+
+  /* Ensure consistent sizing */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button:hover:not(:disabled) {
+  background-color: var(--color-primary);
+  color: var(--color-background);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.button:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background-color: var(--color-surface);
+  color: var(--color-text-light);
+}
+
+.numberButton {
+  /* Specific styling for number buttons (0-9) */
+  font-weight: 700;
+}
+
+.actionButton {
+  /* Styling for backspace and submit buttons */
+  font-size: var(--font-size-base);
+  background-color: #E8E8E8;
+}
+
+.actionButton:hover:not(:disabled) {
+  background-color: #4A90E2;
+  color: var(--color-background);
+}
+
+.button.keyboardActive {
+  /* Visual feedback for keyboard press - matches active state */
+  background-color: var(--color-primary);
+  color: white;
+  transform: translateY(2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

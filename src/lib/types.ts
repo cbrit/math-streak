@@ -1,0 +1,40 @@
+// Operations the game can support
+export type Operation = 'addition' | 'subtraction' | 'multiplication' | 'division';
+
+// Position of the unknown value in the problem
+export type UnknownPosition = 'result' | `operand-${number}`;
+
+// A math problem to solve
+export interface Problem {
+  operation: Operation;
+  operands: number[];
+  unknownPosition: UnknownPosition;
+  answer: number;
+  displayString: string; // e.g., "3 + 4 = ?"
+}
+
+// Configuration for difficulty level
+export interface DifficultyConfig {
+  name: string;
+  operations: Operation[];
+  operandCount: number;
+  unknownPositions: UnknownPosition[];
+  constraints: {
+    maxResult: number;
+    minOperand?: number;
+    maxOperand?: number;
+  };
+}
+
+// Game state
+export interface GameState {
+  currentProblem: Problem;
+  currentAnswer: string;
+  streak: number;
+  highScore: number;
+  isAnswerCorrect: boolean | null;
+  showFeedback: boolean;
+}
+
+// Feedback types
+export type FeedbackType = 'correct' | 'incorrect' | null;

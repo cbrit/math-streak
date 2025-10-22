@@ -1,0 +1,34 @@
+.scoreDisplay {
+  /* Horizontal layout with spacing */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-xl);
+  padding: var(--spacing-lg) var(--spacing-md);
+
+  /* Position at top but not distracting */
+  margin-bottom: var(--spacing-md);
+}
+
+.scoreItem {
+  /* Individual score item container */
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-sm);
+}
+
+.label {
+  /* Label text styling */
+  font-size: var(--font-size-base);
+  color: var(--color-text-light);
+  font-weight: 500;
+}
+
+.value {
+  /* Score value styling - larger and more prominent */
+  font-size: var(--font-size-large);
+  color: var(--color-text);
+  font-weight: 700;
+  min-width: 2ch; /* Prevent layout shift for single to double digits */
+  text-align: left;
+}

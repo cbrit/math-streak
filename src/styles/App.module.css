@@ -1,0 +1,29 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-background);
+  padding: var(--spacing-lg);
+}
+
+.container {
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+  padding: var(--spacing-lg);
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 480px) {
+  .app {
+    padding: var(--spacing-md);
+  }
+
+  .container {
+    gap: var(--spacing-lg);
+    padding: var(--spacing-md);
+  }
+}

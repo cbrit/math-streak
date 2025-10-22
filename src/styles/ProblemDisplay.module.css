@@ -1,0 +1,20 @@
+.problemDisplay {
+  /* Large, centered math problem display */
+  font-size: var(--font-size-xxlarge);
+  color: var(--color-text);
+  text-align: center;
+  padding: var(--spacing-xl);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+
+  /* Ensure readability */
+  line-height: 1.2;
+
+  /* Add some breathing room */
+  margin: var(--spacing-lg) 0;
+}
+
+/* Make the question mark stand out slightly */
+.problemDisplay:has(> *) {
+  /* If we need to target specific parts later, we can add that */
+}

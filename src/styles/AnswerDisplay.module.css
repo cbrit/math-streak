@@ -1,0 +1,35 @@
+.answerDisplay {
+  /* Large centered input display */
+  font-size: var(--font-size-xlarge);
+  font-weight: 600;
+  text-align: center;
+
+  /* Fixed height to prevent layout shift */
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Border and background for input area */
+  background-color: var(--color-surface);
+  border: 2px solid var(--color-text-light);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+
+  /* Text styling */
+  color: var(--color-text);
+
+  /* Smooth transition for content changes */
+  transition: border-color var(--transition-fast);
+}
+
+.answerDisplay:focus-within {
+  border-color: var(--color-primary);
+}
+
+.placeholder {
+  /* Lighter color for placeholder */
+  color: var(--color-text-light);
+  font-size: var(--font-size-xlarge);
+  opacity: 0.5;
+}
