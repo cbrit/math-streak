@@ -3,15 +3,15 @@
   font-size: var(--font-size-xxlarge);
   color: var(--color-text);
   text-align: center;
-  padding: var(--spacing-sm);
+  padding: 0;
   font-weight: 600;
   letter-spacing: 0.02em;
 
   /* Ensure readability */
   line-height: 1.2;
 
-  /* Minimal spacing to maximize viewport usage */
-  margin: var(--spacing-sm) 0;
+  /* No margin to maximize viewport usage */
+  margin: 0;
 }
 
 /* Answer value styling */

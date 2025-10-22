@@ -16,6 +16,7 @@
   flex-direction: column;
   gap: var(--spacing-lg);
   padding: var(--spacing-md);
+  padding-bottom: var(--spacing-xl);
   justify-content: space-evenly;
 }
 
@@ -26,8 +27,9 @@
   }
 
   .container {
-    gap: var(--spacing-md);
+    gap: var(--spacing-xs);
     padding: var(--spacing-sm);
+    padding-bottom: var(--spacing-xl);
   }
 }
 

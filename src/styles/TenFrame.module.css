@@ -5,8 +5,8 @@
   gap: 0;
   justify-content: center;
   align-items: center;
-  padding: var(--spacing-md);
-  margin: var(--spacing-lg) auto;
+  padding: var(--spacing-xs);
+  margin: var(--spacing-xs) auto;
   max-width: fit-content;
 }
 
