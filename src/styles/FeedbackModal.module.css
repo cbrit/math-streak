@@ -57,9 +57,10 @@
 }
 
 .correctAnswerLabel {
-  font-size: var(--font-size-base);
-  color: var(--color-text-light);
-  margin-bottom: var(--spacing-sm);
+  font-size: var(--font-size-xxlarge);
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-lg);
 }
 
 .correctAnswerValue {
@@ -156,6 +157,10 @@
   }
 
   .message {
+    font-size: var(--font-size-xlarge);
+  }
+
+  .correctAnswerLabel {
     font-size: var(--font-size-xlarge);
   }
 

@@ -60,8 +60,8 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         ...state,
         isAnswerCorrect: isCorrect,
         showFeedback: true,
-        // Increment streak on correct answer, reset on incorrect
-        streak: isCorrect ? state.streak + 1 : 0,
+        // Increment streak on correct answer, keep current streak for display on incorrect
+        streak: isCorrect ? state.streak + 1 : state.streak,
       };
     }
 
@@ -72,6 +72,8 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         currentAnswer: '',
         isAnswerCorrect: null,
         showFeedback: false,
+        // Reset streak when moving to next problem after incorrect answer
+        streak: state.isAnswerCorrect === false ? 0 : state.streak,
       };
     }
 

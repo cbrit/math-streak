@@ -8,6 +8,7 @@ interface FeedbackModalProps {
   correctAnswer: number;
   currentStreak: number;
   isNewHighScore: boolean;
+  problemDisplayString: string;
   onNext: () => void;
 }
 
@@ -17,6 +18,7 @@ export function FeedbackModal({
   correctAnswer,
   currentStreak,
   isNewHighScore,
+  problemDisplayString,
   onNext,
 }: FeedbackModalProps) {
   // Auto-advance on correct answer
@@ -67,14 +69,13 @@ export function FeedbackModal({
             <div
               id="correct-answer-label"
               className={styles.correctAnswerLabel}
+              aria-label={`Correct equation: ${problemDisplayString.replace('?', String(correctAnswer))}`}
             >
-              The answer is
-            </div>
-            <div
-              className={styles.correctAnswerValue}
-              aria-label={`Correct answer: ${correctAnswer}`}
-            >
-              {correctAnswer}
+              {problemDisplayString.split('?')[0]}
+              <span className={styles.correctAnswerValue}>
+                {correctAnswer}
+              </span>
+              {problemDisplayString.split('?')[1]}
             </div>
 
             <div

@@ -7,6 +7,8 @@ import { ProblemDisplay } from '@/components/ProblemDisplay';
 import { AnswerDisplay } from '@/components/AnswerDisplay';
 import { NumberPad } from '@/components/NumberPad';
 import { FeedbackModal } from '@/components/FeedbackModal';
+import { TenFrame } from '@/components/TenFrame';
+import { FEATURES } from '@/lib/constants';
 import styles from '@/styles/App.module.css';
 import '@/styles/global.css';
 
@@ -56,6 +58,12 @@ export default function App() {
           displayString={state.currentProblem.displayString}
         />
 
+        <TenFrame
+          operands={state.currentProblem.operands}
+          operation={state.currentProblem.operation}
+          enabled={FEATURES.TEN_FRAME_ENABLED}
+        />
+
         <AnswerDisplay
           answer={state.currentAnswer}
         />
@@ -74,6 +82,7 @@ export default function App() {
           correctAnswer={state.currentProblem.answer}
           currentStreak={state.streak}
           isNewHighScore={state.streak === state.highScore && state.streak > 0}
+          problemDisplayString={state.currentProblem.displayString}
           onNext={handleNext}
         />
       </div>

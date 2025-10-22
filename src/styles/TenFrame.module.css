@@ -1,0 +1,66 @@
+.tenFrame {
+  /* Container for the 10 squares */
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  justify-content: center;
+  align-items: center;
+  padding: var(--spacing-md);
+  margin: var(--spacing-lg) auto;
+  max-width: fit-content;
+}
+
+.square {
+  /* Individual square styling */
+  width: 48px;
+  height: 48px;
+  border: 2px solid #333;
+  box-sizing: border-box;
+
+  /* Smooth color transitions */
+  transition: background-color var(--transition-base);
+}
+
+/* Remove right border to prevent double borders */
+.square:not(:last-child) {
+  border-right: none;
+}
+
+/* Thicker divider between 5th and 6th squares (centered) */
+/* Right half of the divider - applied to 5th square */
+.square.thickDivider {
+  border-right: 3px solid #333;
+}
+
+/* Left half of the divider - applied to 6th square */
+.square.thickDividerStart {
+  border-left: 3px solid #333;
+}
+
+/* Ensure first square has rounded left corners */
+.square:first-child {
+  border-top-left-radius: var(--radius-sm);
+  border-bottom-left-radius: var(--radius-sm);
+}
+
+/* Ensure last square has rounded right corners */
+.square:last-child {
+  border-top-right-radius: var(--radius-sm);
+  border-bottom-right-radius: var(--radius-sm);
+  border-right: 2px solid #333; /* Restore right border for last square */
+}
+
+/* Responsive sizing for smaller screens */
+@media (max-width: 600px) {
+  .square {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .square {
+    width: 32px;
+    height: 32px;
+  }
+}

@@ -19,6 +19,11 @@ export const STORAGE_KEYS = {
   HIGH_SCORE: 'math-streak-high-score',
 } as const;
 
+// Feature flags
+export const FEATURES = {
+  TEN_FRAME_ENABLED: true,
+} as const;
+
 // Initial difficulty configuration (addition, sum ≤ 10)
 export const DEFAULT_CONFIG: DifficultyConfig = {
   name: 'Kindergarten Addition',
