@@ -80,7 +80,7 @@ export function FeedbackModal({
             data-testid="next-button"
             aria-label="Continue to next problem"
           >
-            Next
+            Continue
           </button>
         </div>
       </div>
