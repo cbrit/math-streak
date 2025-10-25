@@ -1,3 +1,44 @@
+.tenFrameContainer {
+  /* Outer container for the hint button or ten-frame */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--spacing-xs);
+  margin: var(--spacing-xs) auto;
+  min-height: 64px; /* Reserve space to prevent layout shift */
+}
+
+.hintButton {
+  /* "Show hint" button styling */
+  padding: var(--spacing-sm) var(--spacing-lg);
+  font-size: 1rem;
+  font-weight: 500;
+  color: #666;
+  background-color: #f5f5f5;
+  border: 2px solid #ddd;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  min-width: 120px;
+  min-height: 44px; /* WCAG touch target */
+}
+
+.hintButton:hover {
+  background-color: #e8e8e8;
+  border-color: #ccc;
+  color: #333;
+}
+
+.hintButton:active {
+  background-color: #ddd;
+  transform: scale(0.98);
+}
+
+.hintButton:focus-visible {
+  outline: 3px solid #3B82F6;
+  outline-offset: 2px;
+}
+
 .tenFrame {
   /* Container for the 10 squares */
   display: flex;
@@ -5,8 +46,6 @@
   gap: 0;
   justify-content: center;
   align-items: center;
-  padding: var(--spacing-xs);
-  margin: var(--spacing-xs) auto;
   max-width: fit-content;
 }
 

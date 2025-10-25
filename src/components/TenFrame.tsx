@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import type { Operation } from '@/lib/types';
 import styles from '@/styles/TenFrame.module.css';
 
@@ -35,6 +35,7 @@ function selectColors(): [string, string] {
  * - Second operand colored with color 2
  * - Remaining squares unfilled (white)
  * - Thicker divider between squares 5 and 6
+ * - Hidden by default with "Show hint" button to reveal
  *
  * Only renders for addition problems with sum ≤ 10
  */
@@ -48,6 +49,14 @@ export function TenFrame({ operands, operation, enabled = true }: TenFrameProps)
   if (operands.length !== 2) {
     return null;
   }
+
+  // Track visibility of the ten-frame
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Reset visibility when problem changes (operands change)
+  useEffect(() => {
+    setIsVisible(false);
+  }, [operands[0], operands[1]]);
 
   // Generate random colors once per problem render
   const [color1, color2] = useMemo(() => selectColors(), [operands[0], operands[1]]);
@@ -88,8 +97,21 @@ export function TenFrame({ operands, operation, enabled = true }: TenFrameProps)
   }
 
   return (
-    <div className={styles.tenFrame} role="img" aria-label={`Ten frame showing ${operands[0]} plus ${operands[1]}`}>
-      {squares}
+    <div className={styles.tenFrameContainer}>
+      {!isVisible ? (
+        <button
+          className={styles.hintButton}
+          onClick={() => setIsVisible(true)}
+          type="button"
+          aria-label="Show hint using ten-frame"
+        >
+          Show hint
+        </button>
+      ) : (
+        <div className={styles.tenFrame} role="img" aria-label={`Ten frame showing ${operands[0]} plus ${operands[1]}`}>
+          {squares}
+        </div>
+      )}
     </div>
   );
 }
