@@ -4,9 +4,11 @@ import styles from '@/styles/SettingsPanel.module.css';
 interface SettingsPanelProps {
   isOpen: boolean;
   onClose: () => void;
+  maxResult: number;
+  onMaxResultChange: (value: number) => void;
 }
 
-export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
+export function SettingsPanel({ isOpen, onClose, maxResult, onMaxResultChange }: SettingsPanelProps) {
   // Handle Esc key to close panel
   useEffect(() => {
     if (!isOpen) return;
@@ -74,7 +76,24 @@ export function SettingsPanel({ isOpen, onClose }: SettingsPanelProps) {
         </div>
 
         <div className={styles.content}>
-          {/* Empty for now - settings will be added here */}
+          <div className={styles.settingSection}>
+            <label htmlFor="max-result" className={styles.settingLabel}>
+              Maximum Sum
+            </label>
+            <select
+              id="max-result"
+              className={styles.settingSelect}
+              value={maxResult}
+              onChange={(e) => onMaxResultChange(Number(e.target.value))}
+              data-testid="max-result-select"
+            >
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
+                <option key={value} value={value}>
+                  {value}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
     </div>

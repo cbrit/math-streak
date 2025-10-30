@@ -75,6 +75,43 @@
   overflow-y: auto;
 }
 
+/* Settings sections */
+.settingSection {
+  margin-bottom: var(--spacing-lg);
+}
+
+.settingLabel {
+  display: block;
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-sm);
+}
+
+.settingSelect {
+  width: 100%;
+  padding: var(--spacing-md);
+  font-size: var(--font-size-base);
+  font-family: var(--font-family);
+  color: var(--color-text);
+  background: var(--color-background);
+  border: 2px solid var(--color-surface);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition-fast);
+  min-height: 56px; /* Touch-friendly */
+}
+
+.settingSelect:hover {
+  border-color: var(--color-primary);
+}
+
+.settingSelect:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+}
+
 /* Animations */
 @keyframes fadeIn {
   from {

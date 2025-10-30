@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useGameState } from '@/hooks/useGameState';
 import { useSound } from '@/hooks/useSound';
 import { useKeyboardInput } from '@/hooks/useKeyboardInput';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { ScoreDisplay } from '@/components/ScoreDisplay';
 import { ProblemDisplay } from '@/components/ProblemDisplay';
 import { AnswerDisplay } from '@/components/AnswerDisplay';
@@ -10,19 +11,29 @@ import { FeedbackModal } from '@/components/FeedbackModal';
 import { TenFrame } from '@/components/TenFrame';
 import { SettingsButton } from '@/components/SettingsButton';
 import { SettingsPanel } from '@/components/SettingsPanel';
-import { FEATURES, TIMING } from '@/lib/constants';
+import { FEATURES, TIMING, DEFAULT_CONFIG, STORAGE_KEYS } from '@/lib/constants';
 import styles from '@/styles/App.module.css';
 import '@/styles/global.css';
 
 export default function App() {
-  // Initialize game state
-  const { state, actions } = useGameState();
+  // Settings state
+  const [maxResult, setMaxResult] = useLocalStorage(STORAGE_KEYS.MAX_RESULT, 10);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+  // Create game config based on settings
+  const gameConfig = useMemo(() => ({
+    ...DEFAULT_CONFIG,
+    constraints: {
+      ...DEFAULT_CONFIG.constraints,
+      maxResult,
+    },
+  }), [maxResult]);
+
+  // Initialize game state with custom config
+  const { state, actions } = useGameState(gameConfig);
 
   // Initialize sound system
   const { playSuccess, playError } = useSound();
-
-  // Settings panel state
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   // Handle answer submission
   const handleSubmit = () => {
@@ -159,6 +170,8 @@ export default function App() {
       <SettingsPanel
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
+        maxResult={maxResult}
+        onMaxResultChange={setMaxResult}
       />
     </div>
   );
