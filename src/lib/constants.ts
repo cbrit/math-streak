@@ -18,7 +18,6 @@ export const UI = {
 
 // Local storage keys
 export const STORAGE_KEYS = {
-  HIGH_SCORE: 'math-streak-high-score',
   MAX_RESULT: 'math-streak-max-result',
   ALLOW_ZERO: 'math-streak-allow-zero',
 } as const;

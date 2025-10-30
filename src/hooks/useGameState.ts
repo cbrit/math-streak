@@ -1,7 +1,6 @@
-import { useReducer, useCallback, useEffect } from 'react';
-import { useLocalStorage } from './useLocalStorage';
+import { useReducer, useCallback } from 'react';
 import { generateProblem } from '@/lib/problemGenerator';
-import { DEFAULT_CONFIG, STORAGE_KEYS, UI } from '@/lib/constants';
+import { DEFAULT_CONFIG, UI } from '@/lib/constants';
 import type { GameState, DifficultyConfig, Problem } from '@/lib/types';
 
 // Action types for game state updates
@@ -10,7 +9,6 @@ type GameAction =
   | { type: 'DELETE_DIGIT' }
   | { type: 'SUBMIT_ANSWER' }
   | { type: 'NEXT_PROBLEM'; problem: Problem }
-  | { type: 'SET_HIGH_SCORE'; score: number }
   | { type: 'START_CELEBRATION' }
   | { type: 'TRANSITION_TO_NEXT' }
   | { type: 'COMPLETE_TRANSITION' };
@@ -50,8 +48,8 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         return state;
       }
 
-      // Don't allow re-submission while feedback is showing
-      if (state.showFeedback) {
+      // Don't allow re-submission during celebration
+      if (state.celebrationPhase !== null) {
         return state;
       }
 
@@ -62,10 +60,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
       return {
         ...state,
         isAnswerCorrect: isCorrect,
-        showFeedback: !isCorrect, // Only show modal for incorrect answers
-        celebrationPhase: isCorrect ? 'revealing' : null,
-        // Increment streak on correct answer, keep current streak for display on incorrect
-        streak: isCorrect ? state.streak + 1 : state.streak,
+        celebrationPhase: 'revealing', // Always trigger animation flow
       };
     }
 
@@ -96,17 +91,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
         currentProblem: action.problem,
         currentAnswer: '',
         isAnswerCorrect: null,
-        showFeedback: false,
         celebrationPhase: null,
-        // Reset streak when moving to next problem after incorrect answer
-        streak: state.isAnswerCorrect === false ? 0 : state.streak,
-      };
-    }
-
-    case 'SET_HIGH_SCORE': {
-      return {
-        ...state,
-        highScore: action.score,
       };
     }
 
@@ -120,34 +105,19 @@ function gameReducer(state: GameState, action: GameAction): GameState {
  *
  * Manages the complete game state including:
  * - Current problem and user answer
- * - Streak tracking and high score persistence
- * - Feedback state for correct/incorrect answers
+ * - Answer checking and feedback state
  *
  * @param config - Difficulty configuration (defaults to DEFAULT_CONFIG)
  * @returns Game state and action functions
  */
 export function useGameState(config: DifficultyConfig = DEFAULT_CONFIG) {
-  // Persist high score to localStorage
-  const [highScore, setHighScore] = useLocalStorage(STORAGE_KEYS.HIGH_SCORE, 0);
-
   // Initialize game state with first problem
   const [state, dispatch] = useReducer(gameReducer, {
     currentProblem: generateProblem(config),
     currentAnswer: '',
-    streak: 0,
-    highScore,
     isAnswerCorrect: null,
-    showFeedback: false,
     celebrationPhase: null,
   });
-
-  // Update high score when streak increases beyond current high score
-  useEffect(() => {
-    if (state.streak > state.highScore) {
-      setHighScore(state.streak);
-      dispatch({ type: 'SET_HIGH_SCORE', score: state.streak });
-    }
-  }, [state.streak, state.highScore, setHighScore]);
 
   /**
    * Add a digit to the current answer

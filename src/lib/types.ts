@@ -34,10 +34,7 @@ export type CelebrationPhase = null | 'revealing' | 'transitioning';
 export interface GameState {
   currentProblem: Problem;
   currentAnswer: string;
-  streak: number;
-  highScore: number;
   isAnswerCorrect: boolean | null;
-  showFeedback: boolean;
   celebrationPhase: CelebrationPhase;
 }
 

@@ -3,11 +3,9 @@ import { useGameState } from '@/hooks/useGameState';
 import { useSound } from '@/hooks/useSound';
 import { useKeyboardInput } from '@/hooks/useKeyboardInput';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { ScoreDisplay } from '@/components/ScoreDisplay';
 import { ProblemDisplay } from '@/components/ProblemDisplay';
 import { AnswerDisplay } from '@/components/AnswerDisplay';
 import { NumberPad } from '@/components/NumberPad';
-import { FeedbackModal } from '@/components/FeedbackModal';
 import { TenFrame } from '@/components/TenFrame';
 import { SettingsButton } from '@/components/SettingsButton';
 import { SettingsPanel } from '@/components/SettingsPanel';
@@ -36,17 +34,11 @@ export default function App() {
   const { state, actions } = useGameState(gameConfig);
 
   // Initialize sound system
-  const { playSuccess, playError } = useSound();
+  const { playSuccess } = useSound();
 
   // Handle answer submission
   const handleSubmit = () => {
     actions.submitAnswer();
-  };
-
-  // Handle next problem
-  const handleNext = () => {
-    setShowAnswerInPlace(false); // Ensure answer is hidden for new problem
-    actions.nextProblem();
   };
 
   // Keyboard input integration - disable during celebration
@@ -54,7 +46,7 @@ export default function App() {
     onNumberKey: actions.updateAnswer,
     onBackspace: actions.deleteLastDigit,
     onEnter: handleSubmit,
-    enabled: !state.showFeedback && state.celebrationPhase === null,
+    enabled: state.celebrationPhase === null,
   });
 
   // Track animation states for slide transition
@@ -62,26 +54,34 @@ export default function App() {
   const [isSlideIn, setIsSlideIn] = useState(false);
   const [showAnswerInPlace, setShowAnswerInPlace] = useState(false);
   const [slidingOutProblem, setSlidingOutProblem] = useState<typeof state.currentProblem | null>(null);
+  const [wasLastAnswerCorrect, setWasLastAnswerCorrect] = useState(false);
 
-  // Play sound when answer is checked
+  // Play sound only when answer is correct
   useEffect(() => {
     if (state.isAnswerCorrect === true) {
       playSuccess();
-    } else if (state.isAnswerCorrect === false) {
-      playError();
     }
-  }, [state.isAnswerCorrect, playSuccess, playError]);
+    // No sound for incorrect answers
+  }, [state.isAnswerCorrect, playSuccess]);
 
-  // Orchestrate celebration flow for correct answers
+  // Orchestrate transition flow for both correct and incorrect answers
   useEffect(() => {
     if (state.celebrationPhase === 'revealing') {
-      const timers: NodeJS.Timeout[] = [];
+      const isCorrect = state.isAnswerCorrect === true;
 
-      // Show the answer immediately
-      setShowAnswerInPlace(true);
+      // Track whether this answer was correct for slide-out animation
+      setWasLastAnswerCorrect(isCorrect);
 
-      // After reveal animation, start slide-out and prepare new problem
-      timers.push(setTimeout(() => {
+      // Only show the answer for correct answers
+      if (isCorrect) {
+        setShowAnswerInPlace(true);
+      }
+
+      // For correct: wait for reveal animation. For incorrect: small delay to ensure slide is visible
+      const revealDelay = isCorrect ? TIMING.ANSWER_REVEAL_DURATION : 50;
+
+      // After reveal animation (or small delay for incorrect), start slide-out
+      const slideTimer = setTimeout(() => {
         // Save the current problem for slide-out animation
         setSlidingOutProblem(state.currentProblem);
         setIsSlideOut(true);
@@ -91,34 +91,31 @@ export default function App() {
         actions.nextProblem();
         setIsSlideIn(true);
 
-        // Reset slide-in after animation completes
-        timers.push(setTimeout(() => {
+        // Reset animation states after slide completes
+        // DON'T add to cleanup array so it always completes even if effect re-runs
+        setTimeout(() => {
           setIsSlideOut(false);
           setIsSlideIn(false);
           setSlidingOutProblem(null);
-        }, TIMING.TRANSITION_DURATION));
-      }, TIMING.ANSWER_REVEAL_DURATION));
+        }, TIMING.TRANSITION_DURATION);
+      }, revealDelay);
 
-      return () => timers.forEach(clearTimeout);
+      // Only cleanup the first timer if effect re-runs before it fires
+      return () => clearTimeout(slideTimer);
     }
-  }, [state.celebrationPhase, actions]);
+  }, [state.celebrationPhase, state.isAnswerCorrect, actions]);
 
   return (
     <div className={styles.app}>
       <SettingsButton onClick={() => setIsSettingsOpen(true)} />
 
       <div className={styles.container}>
-        <ScoreDisplay
-          streak={state.streak}
-          highScore={state.highScore}
-        />
-
         <div style={{ position: 'relative', minHeight: '120px' }}>
           {/* Show sliding out problem during transition (without test ID to avoid conflicts) */}
           {isSlideOut && slidingOutProblem && (
             <ProblemDisplay
               displayString={slidingOutProblem.displayString}
-              showAnswer={true}
+              showAnswer={wasLastAnswerCorrect}
               answer={slidingOutProblem.answer}
               isRevealing={false}
               isTransitioning={true}
@@ -155,18 +152,8 @@ export default function App() {
           onNumberClick={actions.updateAnswer}
           onBackspace={actions.deleteLastDigit}
           onSubmit={handleSubmit}
-          disabled={state.showFeedback || state.celebrationPhase !== null}
+          disabled={state.celebrationPhase !== null}
           activeKey={activeKey}
-        />
-
-        <FeedbackModal
-          isVisible={state.showFeedback}
-          isCorrect={state.isAnswerCorrect ?? false}
-          correctAnswer={state.currentProblem.answer}
-          currentStreak={state.streak}
-          isNewHighScore={state.streak === state.highScore && state.streak > 0}
-          problemDisplayString={state.currentProblem.displayString}
-          onNext={handleNext}
         />
       </div>
 

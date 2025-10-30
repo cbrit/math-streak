@@ -107,8 +107,9 @@ export function useSound(): SoundHook {
     }
 
     try {
-      // Gentle single tone: A3 (220 Hz)
-      playTone(220, 0.2, 0);
+      // Quick "swish" sound: descending tone D4 (293 Hz) → A3 (220 Hz)
+      playTone(293, 0.15, 0);      // D4 - starts immediately
+      playTone(220, 0.15, 0.05);   // A3 - starts 50ms later
     } catch (err) {
       console.error('Error playing error sound:', err);
     }
