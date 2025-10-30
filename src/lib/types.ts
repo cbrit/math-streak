@@ -23,6 +23,7 @@ export interface DifficultyConfig {
     maxResult: number;
     minOperand?: number;
     maxOperand?: number;
+    allowZero?: boolean;
   };
 }
 

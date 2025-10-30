@@ -112,6 +112,46 @@
   box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
 }
 
+/* Checkbox styles */
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  cursor: pointer;
+  padding: var(--spacing-sm) 0;
+}
+
+.checkbox {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  accent-color: var(--color-primary);
+}
+
+.checkboxText {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text);
+  user-select: none;
+}
+
+.checkbox:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.checkboxLabel:has(.checkbox:disabled) {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.disabledNote {
+  font-size: var(--font-size-small);
+  font-weight: 400;
+  color: var(--color-text-light);
+  font-style: italic;
+}
+
 /* Animations */
 @keyframes fadeIn {
   from {

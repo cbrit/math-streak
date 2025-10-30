@@ -18,6 +18,7 @@ import '@/styles/global.css';
 export default function App() {
   // Settings state
   const [maxResult, setMaxResult] = useLocalStorage(STORAGE_KEYS.MAX_RESULT, 10);
+  const [allowZero, setAllowZero] = useLocalStorage(STORAGE_KEYS.ALLOW_ZERO, true);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   // Create game config based on settings
@@ -26,8 +27,10 @@ export default function App() {
     constraints: {
       ...DEFAULT_CONFIG.constraints,
       maxResult,
+      // Force allowZero = true when maxResult = 1 (only valid pairs include 0)
+      allowZero: maxResult === 1 ? true : allowZero,
     },
-  }), [maxResult]);
+  }), [maxResult, allowZero]);
 
   // Initialize game state with custom config
   const { state, actions } = useGameState(gameConfig);
@@ -172,6 +175,8 @@ export default function App() {
         onClose={() => setIsSettingsOpen(false)}
         maxResult={maxResult}
         onMaxResultChange={setMaxResult}
+        allowZero={allowZero}
+        onAllowZeroChange={setAllowZero}
       />
     </div>
   );

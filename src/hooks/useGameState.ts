@@ -176,9 +176,9 @@ export function useGameState(config: DifficultyConfig = DEFAULT_CONFIG) {
    * Resets answer and feedback state
    */
   const nextProblem = useCallback(() => {
-    const newProblem = generateProblem(config);
+    const newProblem = generateProblem(config, state.currentProblem);
     dispatch({ type: 'NEXT_PROBLEM', problem: newProblem });
-  }, [config]);
+  }, [config, state.currentProblem]);
 
   return {
     state,

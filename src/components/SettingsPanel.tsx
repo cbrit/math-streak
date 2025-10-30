@@ -6,9 +6,11 @@ interface SettingsPanelProps {
   onClose: () => void;
   maxResult: number;
   onMaxResultChange: (value: number) => void;
+  allowZero: boolean;
+  onAllowZeroChange: (value: boolean) => void;
 }
 
-export function SettingsPanel({ isOpen, onClose, maxResult, onMaxResultChange }: SettingsPanelProps) {
+export function SettingsPanel({ isOpen, onClose, maxResult, onMaxResultChange, allowZero, onAllowZeroChange }: SettingsPanelProps) {
   // Handle Esc key to close panel
   useEffect(() => {
     if (!isOpen) return;
@@ -93,6 +95,23 @@ export function SettingsPanel({ isOpen, onClose, maxResult, onMaxResultChange }:
                 </option>
               ))}
             </select>
+          </div>
+
+          <div className={styles.settingSection}>
+            <label className={styles.checkboxLabel}>
+              <input
+                type="checkbox"
+                className={styles.checkbox}
+                checked={allowZero || maxResult === 1}
+                onChange={(e) => onAllowZeroChange(e.target.checked)}
+                disabled={maxResult === 1}
+                data-testid="allow-zero-checkbox"
+              />
+              <span className={styles.checkboxText}>
+                Include Zero
+                {maxResult === 1 && <span className={styles.disabledNote}> (required for sum of 1)</span>}
+              </span>
+            </label>
           </div>
         </div>
       </div>
