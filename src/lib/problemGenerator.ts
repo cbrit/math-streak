@@ -1,6 +1,23 @@
 import type { DifficultyConfig, Problem, Operation } from './types';
 
 /**
+ * Pre-computed lookup table: maps each sum to all valid number pairs that add up to it
+ * For addition problems with operands 0-10
+ */
+const ADDITION_PAIRS_BY_SUM: Record<number, [number, number][]> = {
+  1: [[0, 1], [1, 0]],
+  2: [[0, 2], [2, 0], [1, 1]],
+  3: [[0, 3], [3, 0], [1, 2], [2, 1]],
+  4: [[0, 4], [4, 0], [1, 3], [3, 1], [2, 2]],
+  5: [[0, 5], [5, 0], [1, 4], [4, 1], [2, 3], [3, 2]],
+  6: [[0, 6], [6, 0], [1, 5], [5, 1], [2, 4], [4, 2], [3, 3]],
+  7: [[0, 7], [7, 0], [1, 6], [6, 1], [2, 5], [5, 2], [3, 4], [4, 3]],
+  8: [[0, 8], [8, 0], [1, 7], [7, 1], [2, 6], [6, 2], [3, 5], [5, 3], [4, 4]],
+  9: [[0, 9], [9, 0], [1, 8], [8, 1], [2, 7], [7, 2], [3, 6], [6, 3], [4, 5], [5, 4]],
+  10: [[0, 10], [10, 0], [1, 9], [9, 1], [2, 8], [8, 2], [3, 7], [7, 3], [4, 6], [6, 4], [5, 5]],
+};
+
+/**
  * Generate a random integer between min and max (inclusive)
  */
 function getRandomInt(min: number, max: number): number {
@@ -53,26 +70,16 @@ function generateAdditionOperands(config: DifficultyConfig): number[] {
   const { operandCount, constraints } = config;
   const { maxResult, minOperand = 0, maxOperand = 10 } = constraints;
 
-  // For 2 operands (most common case), use simpler approach for better distribution
+  // For 2 operands (most common case), use lookup table for instant generation
   if (operandCount === 2) {
-    let operand1: number;
-    let operand2: number;
-    let attempts = 0;
+    // Pick a random sum from 1 to maxResult
+    const sum = getRandomInt(1, maxResult);
 
-    // Generate operands until we get a valid combination
-    do {
-      operand1 = getRandomInt(minOperand, maxOperand);
-      operand2 = getRandomInt(minOperand, maxOperand);
-      attempts++;
+    // Lookup all valid pairs for this sum
+    const pairs = ADDITION_PAIRS_BY_SUM[sum];
 
-      // Safety check to prevent infinite loop in impossible configurations
-      if (attempts > 100) {
-        // Fall back to ensuring valid result
-        operand1 = getRandomInt(minOperand, Math.min(maxOperand, maxResult));
-        operand2 = getRandomInt(minOperand, Math.min(maxOperand, maxResult - operand1));
-        break;
-      }
-    } while (operand1 + operand2 > maxResult);
+    // Pick a random pair
+    const [operand1, operand2] = getRandomElement(pairs);
 
     return [operand1, operand2];
   }
