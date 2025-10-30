@@ -8,6 +8,8 @@ import { AnswerDisplay } from '@/components/AnswerDisplay';
 import { NumberPad } from '@/components/NumberPad';
 import { FeedbackModal } from '@/components/FeedbackModal';
 import { TenFrame } from '@/components/TenFrame';
+import { SettingsButton } from '@/components/SettingsButton';
+import { SettingsPanel } from '@/components/SettingsPanel';
 import { FEATURES, TIMING } from '@/lib/constants';
 import styles from '@/styles/App.module.css';
 import '@/styles/global.css';
@@ -18,6 +20,9 @@ export default function App() {
 
   // Initialize sound system
   const { playSuccess, playError } = useSound();
+
+  // Settings panel state
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   // Handle answer submission
   const handleSubmit = () => {
@@ -86,6 +91,8 @@ export default function App() {
 
   return (
     <div className={styles.app}>
+      <SettingsButton onClick={() => setIsSettingsOpen(true)} />
+
       <div className={styles.container}>
         <ScoreDisplay
           streak={state.streak}
@@ -148,6 +155,11 @@ export default function App() {
           onNext={handleNext}
         />
       </div>
+
+      <SettingsPanel
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
     </div>
   );
 }

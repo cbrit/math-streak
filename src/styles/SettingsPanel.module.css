@@ -1,0 +1,130 @@
+/* Overlay - semi-transparent background */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+  z-index: 1000;
+  animation: fadeIn var(--transition-base);
+}
+
+/* Panel container */
+.panel {
+  background: var(--color-background);
+  width: 400px;
+  max-width: 90vw;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.2);
+  animation: slideIn var(--transition-base);
+}
+
+/* Header section */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--color-surface);
+}
+
+.title {
+  font-size: var(--font-size-large);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+/* Close button */
+.closeButton {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border-radius: var(--radius-md);
+  color: var(--color-text-light);
+  transition: var(--transition-fast);
+}
+
+.closeButton:hover {
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.closeButton:active {
+  transform: scale(0.95);
+}
+
+.closeIcon {
+  width: 24px;
+  height: 24px;
+}
+
+/* Content area */
+.content {
+  flex: 1;
+  padding: var(--spacing-lg);
+  overflow-y: auto;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+  .panel {
+    width: 320px;
+  }
+
+  .header {
+    padding: var(--spacing-md);
+  }
+
+  .title {
+    font-size: var(--font-size-base);
+  }
+
+  .content {
+    padding: var(--spacing-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .panel {
+    width: 280px;
+  }
+
+  .closeButton {
+    width: 36px;
+    height: 36px;
+  }
+
+  .closeIcon {
+    width: 20px;
+    height: 20px;
+  }
+}
