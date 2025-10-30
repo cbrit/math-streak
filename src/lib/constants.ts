@@ -20,6 +20,7 @@ export const UI = {
 export const STORAGE_KEYS = {
   MAX_RESULT: 'math-streak-max-result',
   ALLOW_ZERO: 'math-streak-allow-zero',
+  ENABLE_HINTS: 'math-streak-enable-hints',
 } as const;
 
 // Feature flags

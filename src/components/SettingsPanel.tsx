@@ -8,9 +8,11 @@ interface SettingsPanelProps {
   onMaxResultChange: (value: number) => void;
   allowZero: boolean;
   onAllowZeroChange: (value: boolean) => void;
+  enableHints: boolean;
+  onEnableHintsChange: (value: boolean) => void;
 }
 
-export function SettingsPanel({ isOpen, onClose, maxResult, onMaxResultChange, allowZero, onAllowZeroChange }: SettingsPanelProps) {
+export function SettingsPanel({ isOpen, onClose, maxResult, onMaxResultChange, allowZero, onAllowZeroChange, enableHints, onEnableHintsChange }: SettingsPanelProps) {
   // Handle Esc key to close panel
   useEffect(() => {
     if (!isOpen) return;
@@ -110,6 +112,21 @@ export function SettingsPanel({ isOpen, onClose, maxResult, onMaxResultChange, a
               <span className={styles.checkboxText}>
                 Include Zero
                 {maxResult === 1 && <span className={styles.disabledNote}> (required for sum of 1)</span>}
+              </span>
+            </label>
+          </div>
+
+          <div className={styles.settingSection}>
+            <label className={styles.checkboxLabel}>
+              <input
+                type="checkbox"
+                className={styles.checkbox}
+                checked={enableHints}
+                onChange={(e) => onEnableHintsChange(e.target.checked)}
+                data-testid="enable-hints-checkbox"
+              />
+              <span className={styles.checkboxText}>
+                Enable Hints
               </span>
             </label>
           </div>

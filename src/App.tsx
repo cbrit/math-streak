@@ -17,6 +17,7 @@ export default function App() {
   // Settings state
   const [maxResult, setMaxResult] = useLocalStorage(STORAGE_KEYS.MAX_RESULT, 10);
   const [allowZero, setAllowZero] = useLocalStorage(STORAGE_KEYS.ALLOW_ZERO, true);
+  const [enableHints, setEnableHints] = useLocalStorage(STORAGE_KEYS.ENABLE_HINTS, true);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   // Create game config based on settings
@@ -141,7 +142,7 @@ export default function App() {
         <TenFrame
           operands={state.currentProblem.operands}
           operation={state.currentProblem.operation}
-          enabled={FEATURES.TEN_FRAME_ENABLED}
+          enabled={enableHints}
         />
 
         <AnswerDisplay
@@ -164,6 +165,8 @@ export default function App() {
         onMaxResultChange={setMaxResult}
         allowZero={allowZero}
         onAllowZeroChange={setAllowZero}
+        enableHints={enableHints}
+        onEnableHintsChange={setEnableHints}
       />
     </div>
   );
