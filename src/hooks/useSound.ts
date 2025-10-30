@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 
 interface SoundHook {
   playSuccess: () => void;
@@ -50,7 +50,7 @@ export function useSound(): SoundHook {
     };
   }, []);
 
-  const playTone = (frequency: number, duration: number, startDelay: number = 0) => {
+  const playTone = useCallback((frequency: number, duration: number, startDelay: number = 0) => {
     const context = audioContextRef.current;
     if (!context) {
       return;
@@ -85,9 +85,9 @@ export function useSound(): SoundHook {
     } catch (err) {
       console.error('Error playing tone:', err);
     }
-  };
+  }, []);
 
-  const playSuccess = () => {
+  const playSuccess = useCallback(() => {
     if (!audioContextRef.current) {
       return;
     }
@@ -99,9 +99,9 @@ export function useSound(): SoundHook {
     } catch (err) {
       console.error('Error playing success sound:', err);
     }
-  };
+  }, [playTone]);
 
-  const playError = () => {
+  const playError = useCallback(() => {
     if (!audioContextRef.current) {
       return;
     }
@@ -113,7 +113,7 @@ export function useSound(): SoundHook {
     } catch (err) {
       console.error('Error playing error sound:', err);
     }
-  };
+  }, [playTone]);
 
   return { playSuccess, playError, isLoaded, error };
 }
